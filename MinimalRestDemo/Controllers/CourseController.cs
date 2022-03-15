@@ -49,7 +49,7 @@ public class CourseController : ControllerBase
         return _courseStorage.UpdateCourse(id, course) ? Ok() : NotFound();
     }
 
-    [HttpPatch("/Course/name/{id}")]
+    [HttpPatch("/Course/{id}/name")]
     public IActionResult PatchName(int id, string name)
     {
         if (string.IsNullOrEmpty(name.Trim())) return BadRequest();
