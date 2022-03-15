@@ -1,10 +1,15 @@
-using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MinimalRestDemo.DAL;
-using MinimalRestDemo.DAL.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<UserStorage>();
+builder.Services.AddDbContext<UserCourseDemoDbContext>(options =>
+{
+    options.UseSqlServer(builder.Configuration.GetConnectionString("UserCoursesDbConnection"));
+});
+
+builder.Services.AddScoped<UserStorage>();
+builder.Services.AddControllers();
 
 builder.Services.AddRazorPages();
 
@@ -18,64 +23,68 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+#region Endpoints
 
-app.MapGet("/users", ([FromServices] UserStorage storage) =>
-{
-    var users = storage.GetAllUsers();
+//app.MapGet("/users", ([FromServices] UserStorage storage) =>
+//{
+//    var users = storage.GetAllUsers();
 
-    if (users.Count <= 0)
-    {
-        return Results.NotFound();
-    }
+//    if (users.Count <= 0)
+//    {
+//        return Results.NotFound();
+//    }
 
-    return Results.Ok(users);
-});
+//    return Results.Ok(users);
+//});
 
-app.MapGet("/users/{id}", ([FromServices] UserStorage storage, int id) =>
-{
-    var user = storage.GetUser(id);
+//app.MapGet("/users/{id}", ([FromServices] UserStorage storage, int id) =>
+//{
+//    var user = storage.GetUser(id);
 
-    return user is null ? Results.Ok(user) : Results.NotFound();
-});
+//    return user is null ? Results.Ok(user) : Results.NotFound();
+//});
 
-app.MapPost("/users", ([FromServices] UserStorage storage, User user) =>
-{
-    if (user is null) return Results.BadRequest();
+//app.MapPost("/users", ([FromServices] UserStorage storage, User user) =>
+//{
+//    if (user is null) return Results.BadRequest();
 
-    return storage.CreateUser(user) ? Results.Ok() : Results.Conflict();
-});
+//    return storage.CreateUser(user) ? Results.Ok() : Results.Conflict();
+//});
 
-app.MapPut("/users/{id}", ([FromServices] UserStorage storage, int id, User user) =>
-{
-    if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email)) return Results.BadRequest();
+//app.MapPut("/users/{id}", ([FromServices] UserStorage storage, int id, User user) =>
+//{
+//    if (string.IsNullOrEmpty(user.Name) || string.IsNullOrEmpty(user.Email)) return Results.BadRequest();
 
-    return storage.UpdateUser(id, user) ? Results.Ok() : Results.NotFound();
-});
+//    return storage.UpdateUser(id, user) ? Results.Ok() : Results.NotFound();
+//});
 
-app.MapMethods("/users/name/{id}", new[] {"PATCH"}, 
-    ([FromServices] UserStorage storage, int id, string name) =>
-{
-    if (string.IsNullOrEmpty(name.Trim())) return Results.BadRequest();
+//app.MapMethods("/users/name/{id}", new[] {"PATCH"}, 
+//    ([FromServices] UserStorage storage, int id, string name) =>
+//{
+//    if (string.IsNullOrEmpty(name.Trim())) return Results.BadRequest();
 
-    return storage.UpdateUserName(id, name) ? 
-        Results.Ok(storage.GetUser(id)) : 
-        Results.NotFound();
-});
+//    return storage.UpdateUserName(id, name) ? 
+//        Results.Ok(storage.GetUser(id)) : 
+//        Results.NotFound();
+//});
 
-app.MapMethods("/users/email/{id}", new[] { "PATCH" }, 
-    ([FromServices] UserStorage storage, int id, string email) =>
-{
-    if (string.IsNullOrEmpty(email.Trim())) return Results.BadRequest();
+//app.MapMethods("/users/email/{id}", new[] { "PATCH" }, 
+//    ([FromServices] UserStorage storage, int id, string email) =>
+//{
+//    if (string.IsNullOrEmpty(email.Trim())) return Results.BadRequest();
 
-    return storage.UpdateUserEmail(id, email) ?
-        Results.Ok(storage.GetUser(id)) :
-        Results.NotFound();
-});
+//    return storage.UpdateUserEmail(id, email) ?
+//        Results.Ok(storage.GetUser(id)) :
+//        Results.NotFound();
+//});
 
-app.MapDelete("/users/{id}", ([FromServices] UserStorage storage, int id) =>
-{
-    return storage.DeleteUser(id) ? Results.Ok() : Results.NotFound();
-});
+//app.MapDelete("/users/{id}", ([FromServices] UserStorage storage, int id) =>
+//{
+//    return storage.DeleteUser(id) ? Results.Ok() : Results.NotFound();
+//});
+
+#endregion
+
 
 app.UseHttpsRedirection();
 app.UseStaticFiles();
@@ -85,5 +94,5 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
-
+app.MapControllers();
 app.Run();
