@@ -1,0 +1,63 @@
+﻿@page
+@model MinimalRestDemo.Pages.Courses.CourseIndexModel
+@{
+    ViewData["Title"] = "Courses page";
+}
+<form action="/courses" method="post">
+    <input type="text" id="course-name" placeholder="Name">
+    <br/>
+</form>
+<button class="btn btn-secondary" id="add-course">Add Course</button>
+
+<br/>
+
+<button class="btn btn-primary" id="get-courses">Get Courses</button>
+
+<ul class="mt-3" id="course-list"></ul>
+
+@section Scripts {
+    <script>
+
+        const courseList = document.getElementById("course-list");
+        const getAllCourses = document.getElementById("get-courses");
+        const addCourse = document.getElementById("add-course");
+
+        addCourse.addEventListener('click',
+            function(event) {
+                event.preventDefault();
+                const courseName = document.getElementById("course-name").value;
+                const courseInfo = { name: courseName };
+                postCourse("/Course", courseInfo);
+            });
+
+
+        getAllCourses.addEventListener("click",
+            () => {
+                showCourses();
+            });
+
+        const showCourses = () => {
+            courseList.innerHTML = "";
+            fetch("/Course")
+                .then(response => response.json())
+                .then(data => {
+                    for (let i = 0; i < data.length; i++) {
+                        const li = document.createElement("li");
+                        li.innerText = `Course name: ${data[i].name}`;
+                        courseList.appendChild(li);
+                    }
+                });
+        }
+        const postCourse = (url = "", data = {} ) => {
+            fetch(url,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify(data)
+                    })
+                .then(response => console.log(response));
+        }
+    </script>
+}

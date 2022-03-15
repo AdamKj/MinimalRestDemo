@@ -9,6 +9,7 @@ builder.Services.AddDbContext<UserCourseDemoDbContext>(options =>
 });
 
 builder.Services.AddScoped<UserStorage>();
+builder.Services.AddScoped<CourseStorage>();
 builder.Services.AddControllers();
 
 builder.Services.AddRazorPages();

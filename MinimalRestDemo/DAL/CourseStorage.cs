@@ -13,7 +13,7 @@ public class CourseStorage
 
     public bool CreateCourse(Course course)
     {
-        if (_context.Users.Any(c => c.Name == course.Name)) return false;
+        if (_context.Courses.Any(c => c.Name == course.Name)) return false;
 
         _context.Courses.Add(course);
         _context.SaveChanges();
@@ -42,20 +42,20 @@ public class CourseStorage
 
     public bool UpdateCourseName(int id, string name)
     {
-        var user = _context.Users.Find(id);
-        if (user is null) return false;
+        var course = _context.Courses.Find(id);
+        if (course is null) return false;
 
-        user.Name = name;
+        course.Name = name;
         _context.SaveChanges();
         return true;
     }
 
     public bool DeleteCourse(int id)
     {
-        var user = _context.Users.Find(id);
-        if (user != null)
+        var course = _context.Courses.Find(id);
+        if (course != null)
         {
-            _context.Users.Remove(user);
+            _context.Courses.Remove(course);
             _context.SaveChanges();
             return true;
         }
