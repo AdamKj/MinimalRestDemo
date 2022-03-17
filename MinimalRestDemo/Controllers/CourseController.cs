@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Runtime.InteropServices;
+using Microsoft.AspNetCore.Mvc;
 using MinimalRestDemo.DAL;
 using MinimalRestDemo.DAL.Models;
 
@@ -39,6 +40,14 @@ public class CourseController : ControllerBase
         if (course is null) return BadRequest();
 
         return _courseStorage.CreateCourse(course) ? Ok() : Conflict("Course already exists");
+    }
+
+    [HttpPost("/Course/{id}")]
+    public IActionResult PostUser([FromBody] User user, int id)
+    {
+        if (user is null) return BadRequest();
+
+        return _courseStorage.ListUserForCourse(user, id) ? Ok() : NotFound();
     }
 
     [HttpPut("{id}")]

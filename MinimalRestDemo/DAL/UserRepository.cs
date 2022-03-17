@@ -2,11 +2,11 @@
 
 namespace MinimalRestDemo.DAL;
 
-public class UserStorage
+public class UserRepository : IUserRepository, IDisposable
 {
     private readonly UserCourseDemoDbContext _context;
 
-    public UserStorage(UserCourseDemoDbContext context)
+    public UserRepository(UserCourseDemoDbContext context)
     {
         _context = context;
     }
@@ -75,5 +75,10 @@ public class UserStorage
         }
 
         return false;
+    }
+
+    public void Dispose()
+    {
+        _context.Dispose();
     }
 }

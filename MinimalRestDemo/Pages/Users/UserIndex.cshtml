@@ -30,7 +30,7 @@
                 event.preventDefault();
                 const userName = document.getElementById("user-name").value;
                 const userEmail = document.getElementById("user-email").value;
-                const userInfo = { name: userName, email: userEmail};
+                const userInfo = { name: userName, email: userEmail };
                 postUser("/User", userInfo);
             });
 
@@ -48,7 +48,7 @@
                     console.log(data);
                     for (let i = 0; i < data.length; i++) {
                         const li = document.createElement("li");
-                        li.innerText = `Namn: ${data[i].name}, Email: ${data[i].email}`;
+                        li.innerText = `Namn: ${data[i].name}, Email: ${data[i].email}, Kurser: ${data[i].courses}`;
                         userList.appendChild(li);
                     }
                 });

@@ -8,7 +8,7 @@ builder.Services.AddDbContext<UserCourseDemoDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("UserCoursesDbConnection"));
 });
 
-builder.Services.AddScoped<UserStorage>();
+builder.Services.AddScoped<UnitOfWork>();
 builder.Services.AddScoped<CourseStorage>();
 builder.Services.AddControllers();
 

@@ -20,6 +20,19 @@ public class CourseStorage
         return true;
     }
 
+    public bool ListUserForCourse(User user, int id)
+    {
+        var course = _context.Courses.Find(id);
+        var getUser = _context.Users.FirstOrDefault(u => u.Email == user.Email);
+
+        if (course is null || getUser is null) return false;
+
+        course.Users.Add(getUser);
+        getUser.Courses.Add(course);
+        _context.SaveChanges();
+        return true;
+    }
+
     public ICollection<Course> GetAllCourses()
     {
         return _context.Courses.ToList();

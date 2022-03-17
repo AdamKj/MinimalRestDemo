@@ -8,17 +8,17 @@ namespace MinimalRestDemo.Controllers;
 [ApiController]
 public class UserController : ControllerBase
 {
-    private readonly UserStorage _userStorage;
+    private readonly UnitOfWork _unitOfWork;
 
-    public UserController([FromServices] UserStorage userStorage)
+    public UserController([FromServices] UnitOfWork unitOfWork)
     {
-        _userStorage = userStorage;
+        _unitOfWork = unitOfWork;
     }
 
     [HttpGet]
     public IActionResult GetAll()
     {
-        var users = _userStorage.GetAllUsers();
+        var users = _unitOfWork.UserRepository.GetAllUsers();
 
         if (users.Count <= 0) return NotFound();
 
@@ -28,7 +28,7 @@ public class UserController : ControllerBase
     [HttpGet("{id}")]
     public IActionResult GetUser(int id)
     {
-        var user = _userStorage.GetUser(id);
+        var user = _unitOfWork.UserRepository.GetUser(id);
 
         return user is null ? Ok(user) : NotFound();
     }
@@ -37,8 +37,8 @@ public class UserController : ControllerBase
     public IActionResult Post([FromBody]User? user)
     {
         if (user is null) return BadRequest();
-
-        return _userStorage.CreateUser(user) ? Ok() : Conflict("User already exists");
+        
+        return _unitOfWork.UserRepository.CreateUser(user) ? Ok() : Conflict("User already exists");
     }
 
     [HttpPut("{id}")]
@@ -48,7 +48,7 @@ public class UserController : ControllerBase
             string.IsNullOrEmpty(user.Email.Trim()))
             return BadRequest();
 
-        return _userStorage.UpdateUser(id, user) ? Ok() : NotFound();
+        return _unitOfWork.UserRepository.UpdateUser(id, user) ? Ok() : NotFound();
     }
 
     [HttpPatch("/User/name/{id}")]
@@ -56,7 +56,7 @@ public class UserController : ControllerBase
     {
         if (string.IsNullOrEmpty(name.Trim())) return BadRequest();
 
-        return _userStorage.UpdateUserName(id, name) ? Ok(_userStorage.GetUser(id)) : NotFound();
+        return _unitOfWork.UserRepository.UpdateUserName(id, name) ? Ok(_unitOfWork.UserRepository.GetUser(id)) : NotFound();
     }
 
     [HttpPatch("/User/email/{id}")]
@@ -64,13 +64,13 @@ public class UserController : ControllerBase
     {
         if (string.IsNullOrEmpty(email.Trim())) return BadRequest();
 
-        return _userStorage.UpdateUserEmail(id, email) ? Ok(_userStorage.GetUser(id)) : NotFound();
+        return _unitOfWork.UserRepository.UpdateUserEmail(id, email) ? Ok(_unitOfWork.UserRepository.GetUser(id)) : NotFound();
     }
 
     [HttpDelete("{id}")]
     public IActionResult Delete(int id)
     {
-        return _userStorage.DeleteUser(id) ? Ok() : NotFound();
+        return _unitOfWork.UserRepository.DeleteUser(id) ? Ok() : NotFound();
     }
 
 }
