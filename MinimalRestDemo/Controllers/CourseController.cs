@@ -31,7 +31,15 @@ public class CourseController : ControllerBase
     {
         var course = _courseStorage.GetCourse(id);
 
-        return course is null ? Ok(course) : NotFound();
+        return course is null ? NotFound() : Ok(course);
+    }
+
+    [HttpGet("/Course/{id}/users")]
+    public IActionResult GetUserCourses(int id)
+    {
+        var userCourse = _courseStorage.GetUserCourses(id);
+
+        return userCourse is null ? NotFound() : Ok(userCourse);
     }
 
     [HttpPost]
@@ -47,7 +55,7 @@ public class CourseController : ControllerBase
     {
         if (user is null) return BadRequest();
 
-        return _courseStorage.ListUserForCourse(user, id) ? Ok() : NotFound();
+        return _courseStorage.ListUserForCourse(user, id) ? Ok(id) : NotFound();
     }
 
     [HttpPut("{id}")]

@@ -11,4 +11,6 @@ public interface IUserRepository : IDisposable
     bool UpdateUserName(int id, string name);
     bool UpdateUserEmail(int id, string email);
     bool DeleteUser(int id);
+    ICollection<Course>? GetUserCourses(int id);
+    User? GetUserByEmail(string email);
 }

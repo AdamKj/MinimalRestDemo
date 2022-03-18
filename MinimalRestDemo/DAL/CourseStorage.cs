@@ -42,6 +42,12 @@ public class CourseStorage
     {
         return _context.Courses.Find(id);
     }
+    public ICollection<User>? GetUserCourses(int id)
+    {
+        var getUser = _context.Courses.Find(id);
+
+        return getUser == null ? null : getUser.Users.ToList();
+    }
 
     public bool UpdateCourse(int id, Course course)
     {

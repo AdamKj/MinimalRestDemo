@@ -30,6 +30,18 @@ public class UserRepository : IUserRepository, IDisposable
         return _context.Users.Find(id);
     }
 
+    public User? GetUserByEmail(string email)
+    {
+        return _context.Users.FirstOrDefault(u => u.Email == email);
+    }
+
+    public ICollection<Course>? GetUserCourses(int id)
+    {
+        var getUser = _context.Users.Find(id);
+
+        return getUser == null ? null : getUser.Courses.ToList();
+    }
+
     public bool UpdateUser(int id, User user)
     {
         var existingUser = _context.Users.Find(id);

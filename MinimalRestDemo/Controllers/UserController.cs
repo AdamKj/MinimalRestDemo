@@ -25,12 +25,28 @@ public class UserController : ControllerBase
         return Ok(users);
     }
 
-    [HttpGet("{id}")]
-    public IActionResult GetUser(int id)
-    {
-        var user = _unitOfWork.UserRepository.GetUser(id);
+    //[HttpGet("{id}")]
+    //public IActionResult GetUser(int id)
+    //{
+    //    var user = _unitOfWork.UserRepository.GetUser(id);
 
-        return user is null ? Ok(user) : NotFound();
+    //    return user is null ? NotFound() : Ok(user);
+    //}
+
+    [HttpGet("{email}")]
+    public IActionResult GetUserByEmail(string email)
+    {
+        var user = _unitOfWork.UserRepository.GetUserByEmail(email);
+
+        return user is null ? NotFound() : Ok(user);
+    }
+
+    [HttpGet("/User/{id}/courses")]
+    public IActionResult GetUserCourses(int id)
+    {
+        var userCourse = _unitOfWork.UserRepository.GetUserCourses(id);
+
+        return userCourse is null ? NotFound() : Ok(userCourse);
     }
 
     [HttpPost]
