@@ -39,7 +39,7 @@ public class UserRepository : IUserRepository, IDisposable
     {
         var getUser = _context.Users.Find(id);
 
-        return getUser == null ? null : getUser.Courses.ToList();
+        return getUser == null ? null : getUser.Courses;
     }
 
     public bool UpdateUser(int id, User user)
